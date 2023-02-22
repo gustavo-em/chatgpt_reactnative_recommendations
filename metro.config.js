@@ -34,19 +34,31 @@ if (isExpo) {
   const MetroSymlinksResolver = require("@rnx-kit/metro-resolver-symlinks")
 
   metroConfig = (async () => {
-    const defaultConfig = await getDefaultConfig()
+    const {
+      resolver: { sourceExts, assetExts },
+    } = await getDefaultConfig()
+
     return makeMetroConfig({
       projectRoot: __dirname,
-      // watchFolders: [`${__dirname}/../..`], // for monorepos
-      resolver: {
-        /**
-         * This custom resolver is for if you're using symlinks.
-         *
-         * You can disable it if you're not using pnpm or a monorepo or symlinks.
-         */
-        resolveRequest: MetroSymlinksResolver(),
-        assetExts: [...defaultConfig.resolver.assetExts, "bin"],
+      transformer: {
+        babelTransformerPath: require.resolve("react-native-svg-transformer"),
       },
+      resolver: {
+        resolveRequest: MetroSymlinksResolver(),
+        assetExts: assetExts.filter((ext) => ext !== "svg"),
+        sourceExts: [...sourceExts, "svg"],
+      },
+      // watchFolders: [`${__dirname}/../..`], // for monorepos
+      // resolver: {
+      //   /**
+      //    * This custom resolver is for if you're using symlinks.
+      //    *
+      //    * You can disable it if you're not using pnpm or a monorepo or symlinks.
+      //    */
+      //   resolveRequest: MetroSymlinksResolver(),
+      //   assetExts: ["bin", "js", "ts", "jsx", "tsx", "json"],
+      //   sourceExts: [...defaultConfig.resolver.sourceExts, "svg"],
+      // },
     })
   })()
 }

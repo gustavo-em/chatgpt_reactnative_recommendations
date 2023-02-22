@@ -6,9 +6,14 @@ import App from "./app/app.tsx"
 import React from "react"
 import { AppRegistry } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 function IgniteApp() {
-  return <App hideSplashScreen={RNBootSplash.hide} />
+  return (
+    <GestureHandlerRootView>
+      <App hideSplashScreen={RNBootSplash.hide} />
+    </GestureHandlerRootView>
+  )
 }
 
 AppRegistry.registerComponent("TestApp", () => IgniteApp)
